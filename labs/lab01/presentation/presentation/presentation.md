@@ -7,7 +7,7 @@ author:
   - Николаев Дмитрий Иванович, НПМмд-02-24
 institute:
   - Российский университет дружбы народов имени Патриса Лумумбы, Москва, Россия
-date: 7 сентября 2024
+date: 6 сентября 2024
 
 
 ## i18n babel
@@ -30,50 +30,111 @@ header-includes:
 
 # Прагматика выполнения
 
-- Освоение Git для выполнения лабораторных работ.
-- Первичная настройка конфигурации git
+- Освоение шифров простой замены --- шифры Цезаря и Атбаша;
+- Программная реализация данных шифров на языке Julia.
  
 # Цель
 
-Изучение идеологии и применения средств контроля версий. Освоение умений по работе с git.
+Изучить шифры простой замены, а именно шифр Цезаря и шифр Атбаша. Научиться программной реализации шифра Цезаря с произвольным ключом и шифра Атбаша на языке программирования Julia.
 
 # Задачи
 
-1. Овладение инструментарием системы контроля версий git.
-2. Настройка первичной конфигурации git.
-3. Создание ключей SSH и PGP для подписи.
-4. Создание рабочего пространства для дальнейшей работы.
+1. Изучить шифры простой замены --- шифры Цезаря и Атбаша.
+2. Реализация шифра Цезаря с произвольным ключом на Julia.
+3. Реализация шифра Атбаша с произвольным ключом на Julia.
 
 # Выполнение работы
 
-## Настройка git 1
+## Шифр Цезаря 1
 
-![Настройка конфигурации git](image/1.png){#fig:001 width=80%}
+```Julia
+alphabet = 'a':'z'  # Алфавит
+function Caesar_Cipher(Input_Message::String, key::Int)::String
+    # Зашифрованное сообщение
+    Cipher = String[]
+    for char in lowercase(Input_Message)
+        if char in alphabet
+            position = findfirst(x -> x == char, alphabet)
+            # осуществляем сдвиг согласно ключу key
+            new_position = mod1(position + key, length(alphabet))
+            push!(Cipher, string(alphabet[new_position]))
+        else
+            # Символ не из алфавита остаётся неизменным
+            push!(Cipher, string(char)) 
+        end
+    end
+    return join(Cipher)
+end
+```
 
-## Настройка git 2
+## Шифр Цезаря 2
 
-![Создание PGP ключа](image/2.png){#fig:002 width=80%}
+```Julia
+    end
+    return join(Cipher)
+end
+Test_Message = "Veni, vidi, vici"
+Test_Key = 3
+println("Исходное сообщение: ", Test_Message)
+println("Шифр Цезаря с ключом $(Test_Key): ", 
+        Caesar_Cipher(Test_Message, Test_Key))
+println("Обратно расшифрованное сообщение: ", 
+Caesar_Cipher(Caesar_Cipher(Test_Message, Test_Key), length(alphabet) - Test_Key))
+Message_1 = "Si vis pacem, para bellum"
+Key_1 = 6
+println("\n Исходное сообщение: ", Message_1)
+println("Шифр Цезаря с ключом $(Key_1): ", 
+        Caesar_Cipher(Message_1, Key_1))
+println("Обратно расшифрованное сообщение: ", 
+Caesar_Cipher(Caesar_Cipher(Message_1, Key_1), length(alphabet) - Key_1))
+```
 
-## Настройка git 3
+## Шифр Цезаря 3
 
-![Настройка подписи git](image/3.png){#fig:003 width=80%}
+![Результат работы шифра Цезаря](image/1.png){#fig:001 width=80%}
 
-## Создание репозитория 1
+## Шифр Атбаша 1
 
-![Создание репозитория курса на основе шаблона 1](image/4.png){#fig:004 width=80%}
+```Julia
+function Atbash_Cipher(Input_Message::String)::String
+    # Зашифрованное сообщение
+    Cipher = String[]
+    Reversed_alphabet = reverse(alphabet)
+    for char in lowercase(Input_Message)
+        if char in alphabet
+            position = findfirst(x -> x == char, alphabet)
+            # осуществляем сдвиг на весь алфавит
+            push!(Cipher, string(Reversed_alphabet[position]))
+        else
+            # Символ не из алфавита остаётся неизменным
+            push!(Cipher, string(char))
+        end
+    end
+    return join(Cipher)
+end
+```
 
-## Создание репозитория 2
+## Шифр Атбаша 2
 
-![Создание репозитория курса на основе шаблона 2](image/5.png){#fig:005 width=80%}
+```Julia
+    return join(Cipher)
+end
+println("\n\nИсходное сообщение: ", Test_Message)
+println("Шифр Атбаша: ", Atbash_Cipher(Test_Message))
+println("Обратно расшифрованное сообщение: ", 
+        Atbash_Cipher(Atbash_Cipher(Test_Message)))
+Message_1 = "Si vis pacem, para bellum"
+Key_1 = 6
+println("\n Исходное сообщение: ", Message_1)
+println("Шифр Атбаша: ", Atbash_Cipher(Message_1))
+println("Обратно расшифрованное сообщение: ", 
+        Atbash_Cipher(Atbash_Cipher(Message_1)))
+```
 
-## Создание репозитория 3
+## Шифр Атбаша 3
 
-![Создание репозитория курса на основе шаблона 3](image/6.png){#fig:006 width=80%}
-
-## Создание репозитория 4
-
-![Репозиторий на сайте GitHub](image/7.png){#fig:007 width=80%}
+![Результат работы шифра Атбаша](image/2.png){#fig:002 width=80%}
 
 # Результаты
 
-В ходе работы я освоил основные принципы и команды Git, а также совершил первичную настройку git с созданием ключей подписи.
+В ходе работы я изучил шифры простой замены, а именно шифры Цезаря и Атбаша, а также написал программную реализацию шифра Цезаря с произвольным ключом и шифра Атбаша на языке программирования Julia.
